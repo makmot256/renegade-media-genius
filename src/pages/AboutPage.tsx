@@ -1,10 +1,9 @@
-
 import React from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
-import { ArrowRight, MessageSquare, Users, Rocket, Award, Star } from "lucide-react";
+import { ArrowRight, MessageSquare, Users, Rocket, Award, Star, Shield } from "lucide-react";
 
 const AboutPage: React.FC = () => {
   return (
