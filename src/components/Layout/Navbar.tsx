@@ -20,7 +20,7 @@ const Navbar: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <nav className="sticky top-0 bg-renegade-dark/95 backdrop-blur-md border-b border-renegade-green/30 z-50">
+    <nav className="sticky top-0 bg-renegade-dark/95 backdrop-blur-md border-b border-renegade-green/30 z-50 light:bg-white/95 light:border-renegade-green/20">
       <div className="container mx-auto px-4 py-3 flex justify-between items-center">
         <div className="flex items-center">
           <Link to="/" className="flex items-center gap-2">
@@ -30,18 +30,18 @@ const Navbar: React.FC = () => {
 
         {/* Desktop Navigation */}
         <div className="hidden md:flex items-center space-x-6">
-          <Link to="/" className="text-foreground hover:text-renegade-green transition-colors">
+          <Link to="/" className="text-foreground hover:text-renegade-green transition-colors font-medium">
             Home
           </Link>
-          <Link to="/features" className="text-foreground hover:text-renegade-green transition-colors">
+          <Link to="/features" className="text-foreground hover:text-renegade-green transition-colors font-medium">
             Features
           </Link>
           {isAuthenticated && (
-            <Link to="/dashboard" className="text-foreground hover:text-renegade-green transition-colors">
+            <Link to="/dashboard" className="text-foreground hover:text-renegade-green transition-colors font-medium">
               Dashboard
             </Link>
           )}
-          <Link to="/about" className="text-foreground hover:text-renegade-green transition-colors">
+          <Link to="/about" className="text-foreground hover:text-renegade-green transition-colors font-medium">
             About
           </Link>
           
@@ -86,7 +86,7 @@ const Navbar: React.FC = () => {
                 </Button>
               </Link>
               <Link to="/signup">
-                <Button className="bg-renegade-green text-black hover:bg-renegade-green/80">Sign Up</Button>
+                <Button className="bg-renegade-green text-black hover:bg-renegade-green/80 font-medium">Sign Up</Button>
               </Link>
             </div>
           )}
@@ -142,7 +142,7 @@ const Navbar: React.FC = () => {
                   <Button variant="outline" className="w-full border-renegade-green/50 text-renegade-green">Login</Button>
                 </Link>
                 <Link to="/signup" onClick={() => setMobileMenuOpen(false)}>
-                  <Button className="w-full bg-renegade-green text-black">Sign Up</Button>
+                  <Button className="w-full bg-renegade-green text-black font-medium">Sign Up</Button>
                 </Link>
               </div>
             )}

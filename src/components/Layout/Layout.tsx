@@ -27,7 +27,7 @@ const Layout: React.FC = () => {
   }, []);
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen transition-colors duration-300">
       <Navbar />
       <main className="flex-1">
         <Outlet />

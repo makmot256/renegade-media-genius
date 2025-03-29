@@ -46,22 +46,22 @@
   }
 
   .light {
-    --background: 0 0% 97%;
-    --foreground: 222 13% 12%;
+    --background: 0 0% 98%; /* Lighter background */
+    --foreground: 222 13% 18%; /* Darker text for better contrast */
 
-    --card: 0 0% 100%;
+    --card: 0 0% 100%; /* Pure white cards */
     --card-foreground: 222 13% 12%;
 
     --popover: 0 0% 100%;
     --popover-foreground: 222 13% 12%;
 
-    --primary: 142 78% 38%; /* Green */
+    --primary: 142 78% 38%; /* Slightly darker green for better visibility */
     --primary-foreground: 0 0% 98%;
 
-    --secondary: 220 13% 91%;
+    --secondary: 220 13% 94%; /* Lighter secondary */
     --secondary-foreground: 222 13% 12%;
 
-    --muted: 220 13% 91%;
+    --muted: 220 13% 94%;
     --muted-foreground: 220 5% 40%;
 
     --accent: 200 97% 48%; /* Blue accent */
@@ -71,7 +71,7 @@
     --destructive-foreground: 0 0% 98%;
 
     --border: 220 13% 86%;
-    --input: 220 13% 86%;
+    --input: 220 13% 90%; /* Slightly darker input background */
     --ring: 142 78% 38%;
 
     --sidebar-background: 0 0% 98%;
@@ -111,4 +111,60 @@
   .cyber-card {
     @apply border border-renegade-green/30 bg-renegade-dark/70 rounded-md backdrop-blur-sm;
   }
+
+  /* Light mode specific styles */
+  .light .cyber-card {
+    @apply border border-renegade-green/30 bg-white shadow-md rounded-md;
+  }
+
+  .light .neon-text {
+    text-shadow: 0 0 1px theme('colors.renegade.green'), 0 0 4px theme('colors.renegade.green');
+  }
+
+  .light .futuristic-bg {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  }
+}
+
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
 }

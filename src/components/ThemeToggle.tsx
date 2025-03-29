@@ -33,13 +33,20 @@ const ThemeToggle = () => {
 
   return (
     <div className="flex items-center gap-2">
-      <Sun size={18} className={`${!isDarkTheme ? "text-renegade-green" : "text-muted-foreground"}`} />
+      <Sun 
+        size={18} 
+        className={`${!isDarkTheme ? "text-renegade-green" : "text-muted-foreground"} transition-colors`}
+      />
       <Switch
         checked={isDarkTheme}
         onCheckedChange={setIsDarkTheme}
         aria-label="Toggle dark mode"
+        className="transition-all duration-300"
       />
-      <Moon size={18} className={`${isDarkTheme ? "text-renegade-green" : "text-muted-foreground"}`} />
+      <Moon 
+        size={18} 
+        className={`${isDarkTheme ? "text-renegade-green" : "text-muted-foreground"} transition-colors`}
+      />
     </div>
   );
 };
