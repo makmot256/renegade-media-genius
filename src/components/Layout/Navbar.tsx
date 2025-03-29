@@ -13,6 +13,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Menu, X, LogOut, User, Settings } from "lucide-react";
+import ThemeToggle from "@/components/ThemeToggle";
 
 const Navbar: React.FC = () => {
   const { user, logout, isAuthenticated } = useAuth();
@@ -43,6 +44,9 @@ const Navbar: React.FC = () => {
           <Link to="/about" className="text-foreground hover:text-renegade-green transition-colors">
             About
           </Link>
+          
+          {/* Add Theme Toggle */}
+          <ThemeToggle />
 
           {isAuthenticated ? (
             <DropdownMenu>
@@ -59,11 +63,11 @@ const Navbar: React.FC = () => {
               <DropdownMenuContent className="w-56" align="end">
                 <DropdownMenuLabel>My Account</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem as="a" href="/profile">
+                <DropdownMenuItem onClick={() => window.location.href = '/profile'}>
                   <User className="mr-2 h-4 w-4" />
                   <span>Profile</span>
                 </DropdownMenuItem>
-                <DropdownMenuItem as="a" href="/dashboard">
+                <DropdownMenuItem onClick={() => window.location.href = '/dashboard'}>
                   <Settings className="mr-2 h-4 w-4" />
                   <span>Dashboard</span>
                 </DropdownMenuItem>
@@ -89,7 +93,8 @@ const Navbar: React.FC = () => {
         </div>
 
         {/* Mobile menu button */}
-        <div className="md:hidden">
+        <div className="md:hidden flex items-center gap-4">
+          <ThemeToggle />
           <Button
             variant="ghost"
             size="icon"
