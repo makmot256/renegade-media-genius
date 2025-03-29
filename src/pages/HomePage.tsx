@@ -1,8 +1,24 @@
-
 import React from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Zap, Shield, Database, BarChart3, Bot } from "lucide-react";
+import { 
+  ArrowRight, 
+  Zap, 
+  Shield, 
+  Database, 
+  BarChart3, 
+  Bot,
+  Code,
+  Copy
+} from "lucide-react";
+import { 
+  Carousel, 
+  CarouselContent, 
+  CarouselItem, 
+  CarouselNext, 
+  CarouselPrevious 
+} from "@/components/ui/carousel";
+import { Card, CardContent } from "@/components/ui/card";
 
 const HomePage: React.FC = () => {
   return (
@@ -38,6 +54,49 @@ const HomePage: React.FC = () => {
         
         {/* Animated glow effect */}
         <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-3/4 h-1 bg-renegade-green/20 rounded-full animate-glow"></div>
+      </section>
+
+      {/* Code Showcase Carousel */}
+      <section className="py-16 md:py-20 bg-renegade-dark border-y border-renegade-green/30">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Powerful <span className="text-renegade-green">Code</span> Generation</h2>
+            <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+              Create optimized social media content with our advanced AI code generation capabilities.
+            </p>
+          </div>
+
+          <Carousel className="max-w-4xl mx-auto">
+            <CarouselContent>
+              {codeExamples.map((example, index) => (
+                <CarouselItem key={index}>
+                  <div className="p-1 md:p-4">
+                    <Card className="border border-renegade-green/20 bg-black/40 backdrop-blur-sm overflow-hidden">
+                      <CardContent className="flex flex-col p-0">
+                        <div className="bg-gray-900 text-gray-300 py-2 px-4 flex justify-between items-center">
+                          <div className="flex items-center">
+                            <Code className="h-4 w-4 mr-2 text-renegade-green" />
+                            <span className="text-sm">{example.fileName}</span>
+                          </div>
+                          <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                            <Copy className="h-4 w-4" />
+                          </Button>
+                        </div>
+                        <pre className="p-4 overflow-x-auto text-left text-sm">
+                          <code className="language-javascript">
+                            {example.code}
+                          </code>
+                        </pre>
+                      </CardContent>
+                    </Card>
+                  </div>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious className="left-0 sm:-left-12" />
+            <CarouselNext className="right-0 sm:-right-12" />
+          </Carousel>
+        </div>
       </section>
 
       {/* Features Section */}
@@ -133,5 +192,99 @@ const HomePage: React.FC = () => {
     </>
   );
 };
+
+// Example code snippets for the carousel
+const codeExamples = [
+  {
+    fileName: "twitter-post.js",
+    code: `// Generate Twitter post with AI
+const generateTwitterPost = async (topic) => {
+  const result = await renegade.generate({
+    prompt: \`Create an engaging tweet about \${topic}\`,
+    maxLength: 280,
+    tone: "professional",
+    hashtags: true
+  });
+  
+  return result.content;
+};
+
+// Schedule the post
+await scheduler.postToTwitter({
+  content: await generateTwitterPost("blockchain technology"),
+  scheduledTime: tomorrow.at("12:00"),
+  media: await getOptimalImage()
+});`
+  },
+  {
+    fileName: "instagram-carousel.js",
+    code: `// Generate Instagram carousel post
+const createCarouselPost = async () => {
+  // Generate multiple slides with AI
+  const slides = await Promise.all(
+    topics.map(topic => 
+      renegade.createVisualContent({
+        topic,
+        style: "modern",
+        format: "square",
+        palette: ["#60E346", "#0EA5E9"]
+      })
+    )
+  );
+  
+  return {
+    caption: await renegade.generateCaption({
+      productName: "RENEGADE AI",
+      includeEmojis: true,
+      callToAction: "Check out our profile"
+    }),
+    media: slides,
+    hashtags: await renegade.generateHashtags(5)
+  };
+};`
+  },
+  {
+    fileName: "analytics-dashboard.js",
+    code: `// Real-time analytics processing
+import { secureICP } from "@renegade/blockchain";
+
+export async function processAnalytics(userData) {
+  // Store data securely on ICP blockchain
+  const encryptedData = await secureICP.encrypt(userData);
+  
+  const engagement = await analytics.calculateEngagement({
+    likes: userData.interactions.likes,
+    comments: userData.interactions.comments,
+    shares: userData.interactions.shares,
+    impressions: userData.reach.total
+  });
+
+  return {
+    score: engagement.score,
+    growth: engagement.weekOverWeekGrowth,
+    recommendations: await ai.getRecommendations(engagement),
+    secureHash: encryptedData.hash
+  };
+}`
+  },
+  {
+    fileName: "content-scheduler.js",
+    code: `// Smart content scheduling algorithm
+const optimalPostingTimes = async (accountData) => {
+  const followerActivity = await analyzeFollowerPatterns(accountData);
+  
+  // Use AI to determine best times based on historical data
+  const schedule = renegade.createOptimalSchedule({
+    followerTimezones: followerActivity.timezones,
+    previousEngagement: accountData.posts.map(p => p.engagementRate),
+    contentType: "promotional",
+    platform: "linkedin"
+  });
+
+  // Return the next 7 days of optimal posting times
+  return schedule.getNextWeek();
+};`
+  }
+];
 
 export default HomePage;
