@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -112,132 +113,38 @@ const AboutPage: React.FC = () => {
           <div className="text-center">
             <Avatar className="w-24 h-24 mx-auto mb-4 border-2 border-renegade-green/30">
               <AvatarImage src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=400&h=400&fit=crop" />
-              <AvatarFallback>AJ</AvatarFallback>
+              <AvatarFallback>JS</AvatarFallback>
             </Avatar>
-            <h3 className="text-xl font-semibold mb-1">Alex Johnson</h3>
-            <p className="text-renegade-green mb-2">Founder & CEO</p>
-            <p className="text-sm text-muted-foreground">
-              AI researcher with a passion for decentralized systems
-            </p>
+            <h3 className="text-xl font-semibold mb-1">JOHNSON</h3>
+            <p className="text-renegade-green mb-2">FRONTEND</p>
           </div>
 
           <div className="text-center">
             <Avatar className="w-24 h-24 mx-auto mb-4 border-2 border-renegade-green/30">
               <AvatarImage src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&fit=crop" />
-              <AvatarFallback>SR</AvatarFallback>
+              <AvatarFallback>LS</AvatarFallback>
             </Avatar>
-            <h3 className="text-xl font-semibold mb-1">Sarah Rodriguez</h3>
-            <p className="text-renegade-green mb-2">CTO</p>
-            <p className="text-sm text-muted-foreground">
-              Blockchain developer specializing in ICP architecture
-            </p>
+            <h3 className="text-xl font-semibold mb-1">LOUIS</h3>
+            <p className="text-renegade-green mb-2">FRONTEND</p>
           </div>
 
           <div className="text-center">
             <Avatar className="w-24 h-24 mx-auto mb-4 border-2 border-renegade-green/30">
               <AvatarImage src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop" />
-              <AvatarFallback>MK</AvatarFallback>
+              <AvatarFallback>BY</AvatarFallback>
             </Avatar>
-            <h3 className="text-xl font-semibold mb-1">Marcus Kim</h3>
-            <p className="text-renegade-green mb-2">Head of AI</p>
-            <p className="text-sm text-muted-foreground">
-              Former OpenAI researcher with expertise in GPT models
-            </p>
+            <h3 className="text-xl font-semibold mb-1">BYRON</h3>
+            <p className="text-renegade-green mb-2">BACKEND</p>
           </div>
 
           <div className="text-center">
             <Avatar className="w-24 h-24 mx-auto mb-4 border-2 border-renegade-green/30">
               <AvatarImage src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&h=400&fit=crop" />
-              <AvatarFallback>LP</AvatarFallback>
+              <AvatarFallback>DT</AvatarFallback>
             </Avatar>
-            <h3 className="text-xl font-semibold mb-1">Leila Patel</h3>
-            <p className="text-renegade-green mb-2">CMO</p>
-            <p className="text-sm text-muted-foreground">
-              Digital marketing strategist with 10+ years experience
-            </p>
+            <h3 className="text-xl font-semibold mb-1">DOROTHEA</h3>
+            <p className="text-renegade-green mb-2">BACKEND</p>
           </div>
-        </div>
-      </div>
-
-      {/* Testimonials */}
-      <div className="mb-20">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold mb-4">What Users Are Saying</h2>
-          <div className="h-1 w-20 bg-renegade-green mx-auto mb-6"></div>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <Card className="cyber-card">
-            <CardContent className="pt-6">
-              <div className="flex mb-4">
-                <Star className="h-5 w-5 text-renegade-green" />
-                <Star className="h-5 w-5 text-renegade-green" />
-                <Star className="h-5 w-5 text-renegade-green" />
-                <Star className="h-5 w-5 text-renegade-green" />
-                <Star className="h-5 w-5 text-renegade-green" />
-              </div>
-              <p className="mb-6">
-                "RENEGADE has completely transformed how we approach social media. The AI-generated content saves us hours every week while maintaining our brand voice perfectly."
-              </p>
-              <div className="flex items-center">
-                <Avatar className="h-10 w-10 mr-3">
-                  <AvatarFallback>JD</AvatarFallback>
-                </Avatar>
-                <div>
-                  <p className="font-medium">Jamie Doe</p>
-                  <p className="text-sm text-muted-foreground">Marketing Director, TechFuture</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="cyber-card">
-            <CardContent className="pt-6">
-              <div className="flex mb-4">
-                <Star className="h-5 w-5 text-renegade-green" />
-                <Star className="h-5 w-5 text-renegade-green" />
-                <Star className="h-5 w-5 text-renegade-green" />
-                <Star className="h-5 w-5 text-renegade-green" />
-                <Star className="h-5 w-5 text-renegade-green" />
-              </div>
-              <p className="mb-6">
-                "The blockchain integration gives me peace of mind knowing my content is secure and verifiable. The analytics tools have helped us double our engagement in just three months."
-              </p>
-              <div className="flex items-center">
-                <Avatar className="h-10 w-10 mr-3">
-                  <AvatarFallback>RK</AvatarFallback>
-                </Avatar>
-                <div>
-                  <p className="font-medium">Riley Kim</p>
-                  <p className="text-sm text-muted-foreground">Content Creator</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="cyber-card">
-            <CardContent className="pt-6">
-              <div className="flex mb-4">
-                <Star className="h-5 w-5 text-renegade-green" />
-                <Star className="h-5 w-5 text-renegade-green" />
-                <Star className="h-5 w-5 text-renegade-green" />
-                <Star className="h-5 w-5 text-renegade-green" />
-                <Star className="h-5 w-5 text-renegade-green" />
-              </div>
-              <p className="mb-6">
-                "As a small business owner, RENEGADE has leveled the playing field. We now have content that competes with major brands, all thanks to the AI tools and scheduling features."
-              </p>
-              <div className="flex items-center">
-                <Avatar className="h-10 w-10 mr-3">
-                  <AvatarFallback>MJ</AvatarFallback>
-                </Avatar>
-                <div>
-                  <p className="font-medium">Morgan James</p>
-                  <p className="text-sm text-muted-foreground">Owner, Artisan Coffeehouse</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
         </div>
       </div>
 
@@ -265,3 +172,4 @@ const AboutPage: React.FC = () => {
 };
 
 export default AboutPage;
+
