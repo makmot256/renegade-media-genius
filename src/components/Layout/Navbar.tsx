@@ -12,7 +12,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Menu, X, LogOut, User, Settings } from "lucide-react";
+import { Menu, X, LogOut, User, Settings, Car } from "lucide-react";
 import ThemeToggle from "@/components/ThemeToggle";
 
 const Navbar: React.FC = () => {
@@ -35,6 +35,9 @@ const Navbar: React.FC = () => {
           </Link>
           <Link to="/features" className="text-foreground hover:text-renegade-green transition-colors font-medium">
             Features
+          </Link>
+          <Link to="/car-rental" className="text-foreground hover:text-renegade-green transition-colors font-medium">
+            Car Rental
           </Link>
           {isAuthenticated && (
             <Link to="/dashboard" className="text-foreground hover:text-renegade-green transition-colors font-medium">
@@ -70,6 +73,10 @@ const Navbar: React.FC = () => {
                 <DropdownMenuItem onClick={() => window.location.href = '/dashboard'}>
                   <Settings className="mr-2 h-4 w-4" />
                   <span>Dashboard</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => window.location.href = '/car-tracking'}>
+                  <Car className="mr-2 h-4 w-4" />
+                  <span>Car Tracking</span>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={logout}>
@@ -116,10 +123,18 @@ const Navbar: React.FC = () => {
             <Link to="/features" className="p-2 hover:bg-secondary rounded-md" onClick={() => setMobileMenuOpen(false)}>
               Features
             </Link>
+            <Link to="/car-rental" className="p-2 hover:bg-secondary rounded-md" onClick={() => setMobileMenuOpen(false)}>
+              Car Rental
+            </Link>
             {isAuthenticated && (
-              <Link to="/dashboard" className="p-2 hover:bg-secondary rounded-md" onClick={() => setMobileMenuOpen(false)}>
-                Dashboard
-              </Link>
+              <>
+                <Link to="/dashboard" className="p-2 hover:bg-secondary rounded-md" onClick={() => setMobileMenuOpen(false)}>
+                  Dashboard
+                </Link>
+                <Link to="/car-tracking" className="p-2 hover:bg-secondary rounded-md" onClick={() => setMobileMenuOpen(false)}>
+                  Car Tracking
+                </Link>
+              </>
             )}
             <Link to="/about" className="p-2 hover:bg-secondary rounded-md" onClick={() => setMobileMenuOpen(false)}>
               About
