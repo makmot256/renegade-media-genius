@@ -16,11 +16,6 @@ import FeaturesPage from "./pages/FeaturesPage";
 import AboutPage from "./pages/AboutPage";
 import NotFound from "./pages/NotFound";
 
-// Car Rental Pages
-import CarRentalPage from "./pages/CarRentalPage";
-import CarDetailPage from "./pages/CarDetailPage";
-import CarTrackingPage from "./pages/CarTrackingPage";
-
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -38,11 +33,6 @@ const App = () => (
               <Route path="/dashboard" element={<DashboardPage />} />
               <Route path="/features" element={<FeaturesPage />} />
               <Route path="/about" element={<AboutPage />} />
-              
-              {/* Car Rental Routes */}
-              <Route path="/car-rental" element={<CarRentalPage />} />
-              <Route path="/car-details/:id" element={<CarDetailPage />} />
-              <Route path="/car-tracking" element={<CarTrackingPage />} />
             </Route>
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
