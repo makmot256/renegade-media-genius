@@ -2,19 +2,21 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
+import { useWeb3 } from "@/contexts/Web3Context";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { LogIn, AlertCircle } from "lucide-react";
+import { LogIn, AlertCircle, Wallet } from "lucide-react";
 
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { login } = useAuth();
+  const { login, loginWithWallet } = useAuth();
+  const { connectWallet, isConnecting, isWalletConnected } = useWeb3();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -32,6 +34,20 @@ const LoginPage: React.FC = () => {
     }
   };
 
+  const handleWalletLogin = async () => {
+    try {
+      if (!isWalletConnected) {
+        await connectWallet();
+        // loginWithWallet will be called automatically after wallet connects
+      } else {
+        await loginWithWallet();
+        navigate("/dashboard");
+      }
+    } catch (err) {
+      setError("Failed to connect wallet. Please try again.");
+    }
+  };
+
   return (
     <div className="flex items-center justify-center min-h-[calc(100vh-8rem)] px-4 py-12">
       <div className="w-full max-w-md">
@@ -39,7 +55,7 @@ const LoginPage: React.FC = () => {
           <CardHeader className="space-y-1">
             <CardTitle className="text-2xl font-bold text-center">Sign In</CardTitle>
             <CardDescription className="text-center">
-              Enter your credentials to access your account
+              Enter your credentials or connect your wallet to access your account
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -49,6 +65,37 @@ const LoginPage: React.FC = () => {
                 <AlertDescription>{error}</AlertDescription>
               </Alert>
             )}
+            
+            {/* Wallet Login Section */}
+            <div className="mb-6">
+              <Button
+                onClick={handleWalletLogin}
+                disabled={isConnecting}
+                className="w-full bg-renegade-green hover:bg-renegade-green/80 text-black mb-4"
+                variant="default"
+              >
+                {isConnecting ? (
+                  <div className="flex items-center">
+                    <span className="animate-pulse">Connecting Wallet...</span>
+                  </div>
+                ) : (
+                  <div className="flex items-center">
+                    <Wallet className="mr-2 h-4 w-4" />
+                    {isWalletConnected ? 'Sign In with Wallet' : 'Connect Wallet'}
+                  </div>
+                )}
+              </Button>
+              
+              <div className="relative">
+                <div className="absolute inset-0 flex items-center">
+                  <span className="w-full border-t border-renegade-green/30" />
+                </div>
+                <div className="relative flex justify-center text-xs uppercase">
+                  <span className="bg-background px-2 text-muted-foreground">Or continue with email</span>
+                </div>
+              </div>
+            </div>
+
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
@@ -86,6 +133,7 @@ const LoginPage: React.FC = () => {
                 type="submit"
                 className="w-full bg-renegade-green hover:bg-renegade-green/80 text-black"
                 disabled={isSubmitting}
+                variant="outline"
               >
                 {isSubmitting ? (
                   <div className="flex items-center">
@@ -93,7 +141,7 @@ const LoginPage: React.FC = () => {
                   </div>
                 ) : (
                   <div className="flex items-center">
-                    <LogIn className="mr-2 h-4 w-4" /> Sign In
+                    <LogIn className="mr-2 h-4 w-4" /> Sign In with Email
                   </div>
                 )}
               </Button>

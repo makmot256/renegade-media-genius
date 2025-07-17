@@ -1,18 +1,22 @@
 
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import { useToast } from "@/components/ui/use-toast";
+import { useWeb3 } from './Web3Context';
 
 type User = {
   id: string;
   name: string;
   email: string;
   avatar: string;
+  walletAddress?: string;
+  authMethod: 'email' | 'wallet';
 };
 
 type AuthContextType = {
   user: User | null;
   isLoading: boolean;
   login: (email: string, password: string) => Promise<void>;
+  loginWithWallet: () => Promise<void>;
   logout: () => void;
   isAuthenticated: boolean;
 };
@@ -31,6 +35,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const { toast } = useToast();
+  const { wallet, isWalletConnected } = useWeb3();
 
   // Check if user is already logged in (from localStorage)
   useEffect(() => {
@@ -46,6 +51,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setIsLoading(false);
   }, []);
 
+  // Auto-login with wallet if connected and no other user
+  useEffect(() => {
+    if (isWalletConnected && wallet && !user) {
+      loginWithWallet();
+    }
+  }, [isWalletConnected, wallet, user]);
+
   const login = async (email: string, password: string) => {
     setIsLoading(true);
     
@@ -58,6 +70,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           name: email.split('@')[0],
           email,
           avatar: `https://api.dicebear.com/7.x/personas/svg?seed=${email}`,
+          authMethod: 'email' as const,
         };
 
         // Save user to localStorage for persistence
@@ -82,6 +95,49 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  const loginWithWallet = async () => {
+    if (!wallet) {
+      toast({
+        title: "Wallet Not Connected",
+        description: "Please connect your wallet first",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      // Create user from wallet address
+      const walletUser = {
+        id: `wallet_${wallet.address}`,
+        name: `${wallet.address.slice(0, 6)}...${wallet.address.slice(-4)}`,
+        email: '', // No email for wallet users
+        avatar: `https://api.dicebear.com/7.x/identicon/svg?seed=${wallet.address}`,
+        walletAddress: wallet.address,
+        authMethod: 'wallet' as const,
+      };
+
+      // Save user to localStorage for persistence
+      localStorage.setItem('renegade-user', JSON.stringify(walletUser));
+      setUser(walletUser);
+      
+      toast({
+        title: "Wallet Login Successful",
+        description: `Welcome, ${walletUser.name}!`,
+      });
+    } catch (error) {
+      toast({
+        title: "Wallet Login Failed",
+        description: "Failed to authenticate with wallet",
+        variant: "destructive",
+      });
+      throw error;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const logout = () => {
     localStorage.removeItem('renegade-user');
     setUser(null);
@@ -95,6 +151,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     user,
     isLoading,
     login,
+    loginWithWallet,
     logout,
     isAuthenticated: !!user,
   };
