@@ -7,8 +7,9 @@ import ContentGenerator from "@/components/Dashboard/ContentGenerator";
 import AnalyticsOverview from "@/components/Dashboard/AnalyticsOverview";
 import SocialAccounts from "@/components/Dashboard/SocialAccounts";
 import DeepfakeDetection from "@/components/Dashboard/DeepfakeDetection";
+import ARContentCreator from "@/components/Dashboard/ARContentCreator";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Bot, BarChart3, Share2, Calendar, Settings, Shield } from "lucide-react";
+import { Bot, BarChart3, Share2, Calendar, Settings, Shield, Sparkles } from "lucide-react";
 
 const DashboardPage: React.FC = () => {
   const { isAuthenticated, user } = useAuth();
@@ -30,6 +31,9 @@ const DashboardPage: React.FC = () => {
             <TabsTrigger value="generate" className="data-[state=active]:border-b-2 data-[state=active]:border-renegade-green data-[state=active]:text-renegade-green rounded-none">
               <Bot className="mr-2 h-4 w-4" /> Content Generator
             </TabsTrigger>
+            <TabsTrigger value="ar-content" className="data-[state=active]:border-b-2 data-[state=active]:border-renegade-green data-[state=active]:text-renegade-green rounded-none">
+              <Sparkles className="mr-2 h-4 w-4" /> AR Content Creator
+            </TabsTrigger>
             <TabsTrigger value="analytics" className="data-[state=active]:border-b-2 data-[state=active]:border-renegade-green data-[state=active]:text-renegade-green rounded-none">
               <BarChart3 className="mr-2 h-4 w-4" /> Analytics
             </TabsTrigger>
@@ -50,6 +54,10 @@ const DashboardPage: React.FC = () => {
 
         <TabsContent value="generate" className="space-y-4">
           <ContentGenerator />
+        </TabsContent>
+
+        <TabsContent value="ar-content" className="space-y-4">
+          <ARContentCreator />
         </TabsContent>
 
         <TabsContent value="analytics" className="space-y-4">
