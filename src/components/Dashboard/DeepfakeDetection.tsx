@@ -7,7 +7,8 @@ import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Upload, Shield, AlertTriangle, CheckCircle, Eye, Video, Image } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Upload, Shield, AlertTriangle, CheckCircle, Eye, Video, Image, History, Trash2, Download } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 
 interface DetectionResult {
@@ -17,11 +18,21 @@ interface DetectionResult {
   timestamp: string;
 }
 
+interface DetectionHistoryItem {
+  id: string;
+  fileName: string;
+  fileType: string;
+  fileSize: number;
+  result: DetectionResult;
+  timestamp: Date;
+}
+
 const DeepfakeDetection: React.FC = () => {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [detectionResult, setDetectionResult] = useState<DetectionResult | null>(null);
   const [analysisProgress, setAnalysisProgress] = useState(0);
+  const [detectionHistory, setDetectionHistory] = useState<DetectionHistoryItem[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
 
@@ -95,6 +106,18 @@ const DeepfakeDetection: React.FC = () => {
       setDetectionResult(mockResult);
       setAnalysisProgress(100);
       
+      // Add to detection history
+      const historyItem: DetectionHistoryItem = {
+        id: Date.now().toString(),
+        fileName: uploadedFile.name,
+        fileType: uploadedFile.type,
+        fileSize: uploadedFile.size,
+        result: mockResult,
+        timestamp: new Date()
+      };
+      
+      setDetectionHistory(prev => [historyItem, ...prev]);
+      
       toast({
         title: "Analysis complete",
         description: mockResult.isDeepfake 
@@ -121,6 +144,26 @@ const DeepfakeDetection: React.FC = () => {
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
+  };
+
+  const handleDeleteHistoryItem = (id: string) => {
+    setDetectionHistory(prev => prev.filter(item => item.id !== id));
+    toast({
+      title: "History item deleted",
+      description: "The detection record has been removed",
+    });
+  };
+
+  const formatFileSize = (bytes: number) => {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  };
+
+  const getFileIcon = (fileType: string) => {
+    return fileType.startsWith('image/') ? <Image className="h-4 w-4" /> : <Video className="h-4 w-4" />;
   };
 
   return (
@@ -275,9 +318,83 @@ const DeepfakeDetection: React.FC = () => {
             <TabsContent value="results">
               <Card className="cyber-card">
                 <CardContent className="pt-6">
-                  <div className="text-center py-8">
-                    <p className="text-muted-foreground">Your detection history will appear here</p>
-                  </div>
+                  {detectionHistory.length === 0 ? (
+                    <div className="text-center py-8">
+                      <History className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                      <p className="text-muted-foreground">No detection history yet</p>
+                      <p className="text-sm text-muted-foreground mt-2">
+                        Analyzed files will appear here after detection
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <h3 className="text-lg font-medium">Detection History</h3>
+                        <Badge variant="secondary">{detectionHistory.length} files analyzed</Badge>
+                      </div>
+                      
+                      <div className="space-y-3 max-h-96 overflow-y-auto">
+                        {detectionHistory.map((item) => (
+                          <Card key={item.id} className="border-renegade-green/30">
+                            <CardContent className="pt-4">
+                              <div className="space-y-3">
+                                <div className="flex items-start justify-between">
+                                  <div className="flex items-center gap-3 flex-1">
+                                    {getFileIcon(item.fileType)}
+                                    <div className="flex-1">
+                                      <div className="flex items-center gap-2 mb-1">
+                                        <h4 className="font-medium text-sm">{item.fileName}</h4>
+                                        <Badge
+                                          variant={item.result.isDeepfake ? "destructive" : "default"}
+                                          className="text-xs"
+                                        >
+                                          {item.result.isDeepfake ? "Deepfake" : "Authentic"}
+                                        </Badge>
+                                      </div>
+                                      <p className="text-xs text-muted-foreground">
+                                        {formatFileSize(item.fileSize)} • Confidence: {item.result.confidence.toFixed(1)}%
+                                      </p>
+                                    </div>
+                                  </div>
+                                  <div className="flex items-center gap-2">
+                                    <Button
+                                      size="sm"
+                                      variant="ghost"
+                                      className="h-8 w-8 p-0"
+                                    >
+                                      <Download className="h-4 w-4" />
+                                    </Button>
+                                    <Button
+                                      size="sm"
+                                      variant="ghost"
+                                      onClick={() => handleDeleteHistoryItem(item.id)}
+                                      className="h-8 w-8 p-0 text-red-500 hover:text-red-700"
+                                    >
+                                      <Trash2 className="h-4 w-4" />
+                                    </Button>
+                                  </div>
+                                </div>
+                                
+                                <div className="flex items-center gap-2">
+                                  <div className="flex-1">
+                                    <Progress value={item.result.confidence} className="h-2" />
+                                  </div>
+                                  <span className="text-xs text-muted-foreground">
+                                    {item.result.confidence.toFixed(1)}%
+                                  </span>
+                                </div>
+                                
+                                <div className="flex items-center justify-between text-xs text-muted-foreground">
+                                  <span>Method: {item.result.detectionMethod}</span>
+                                  <span>Analyzed on {item.timestamp.toLocaleString()}</span>
+                                </div>
+                              </div>
+                            </CardContent>
+                          </Card>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </CardContent>
               </Card>
             </TabsContent>

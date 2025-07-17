@@ -8,8 +8,9 @@ import AnalyticsOverview from "@/components/Dashboard/AnalyticsOverview";
 import SocialAccounts from "@/components/Dashboard/SocialAccounts";
 import DeepfakeDetection from "@/components/Dashboard/DeepfakeDetection";
 import ARContentCreator from "@/components/Dashboard/ARContentCreator";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Bot, BarChart3, Share2, Calendar, Settings, Shield, Sparkles } from "lucide-react";
+import ContentScheduler from "@/components/Dashboard/ContentScheduler";
+import Settings from "@/components/Dashboard/Settings";
+import { Bot, BarChart3, Share2, Calendar, Settings as SettingsIcon, Shield, Sparkles } from "lucide-react";
 
 const DashboardPage: React.FC = () => {
   const { isAuthenticated, user } = useAuth();
@@ -47,7 +48,7 @@ const DashboardPage: React.FC = () => {
               <Calendar className="mr-2 h-4 w-4" /> Scheduler
             </TabsTrigger>
             <TabsTrigger value="settings" className="data-[state=active]:border-b-2 data-[state=active]:border-renegade-green data-[state=active]:text-renegade-green rounded-none">
-              <Settings className="mr-2 h-4 w-4" /> Settings
+              <SettingsIcon className="mr-2 h-4 w-4" /> Settings
             </TabsTrigger>
           </TabsList>
         </div>
@@ -73,39 +74,11 @@ const DashboardPage: React.FC = () => {
         </TabsContent>
 
         <TabsContent value="schedule" className="space-y-4">
-          <Card className="cyber-card">
-            <CardHeader>
-              <CardTitle>Content Calendar</CardTitle>
-              <CardDescription>
-                Schedule and manage your upcoming content
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="h-[400px] flex items-center justify-center">
-                <div className="text-center">
-                  <p className="text-muted-foreground">Your scheduled content will appear here</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+          <ContentScheduler />
         </TabsContent>
 
         <TabsContent value="settings" className="space-y-4">
-          <Card className="cyber-card">
-            <CardHeader>
-              <CardTitle>Account Settings</CardTitle>
-              <CardDescription>
-                Manage your preferences and account details
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="h-[400px] flex items-center justify-center">
-                <div className="text-center">
-                  <p className="text-muted-foreground">Account settings will appear here</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+          <Settings />
         </TabsContent>
       </Tabs>
     </div>

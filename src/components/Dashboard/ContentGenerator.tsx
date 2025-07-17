@@ -5,7 +5,8 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent } from "@/components/ui/card";
-import { Loader2, Copy, Save, Share, Sparkles, Mic, MicOff, Upload } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Loader2, Copy, Save, Share, Sparkles, Mic, MicOff, Upload, History, Trash2 } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { Input } from "@/components/ui/input";
 import GoogleTranslate from "@/components/GoogleTranslate";
@@ -28,6 +29,16 @@ const contentTypes = [
   { value: "panorama", label: "Panorama Image" },
 ];
 
+interface GenerationHistoryItem {
+  id: string;
+  prompt: string;
+  platform: string;
+  contentType: string;
+  tone: string;
+  generatedContent: string;
+  timestamp: Date;
+}
+
 const ContentGenerator: React.FC = () => {
   const [prompt, setPrompt] = useState("");
   const [platform, setPlatform] = useState("twitter");
@@ -37,6 +48,7 @@ const ContentGenerator: React.FC = () => {
   const [generatedContent, setGeneratedContent] = useState("");
   const [isRecording, setIsRecording] = useState(false);
   const [arFile, setArFile] = useState<File | null>(null);
+  const [generationHistory, setGenerationHistory] = useState<GenerationHistoryItem[]>([]);
   const { toast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -76,6 +88,20 @@ const ContentGenerator: React.FC = () => {
       }
       
       setGeneratedContent(result);
+      
+      // Add to generation history
+      const historyItem: GenerationHistoryItem = {
+        id: Date.now().toString(),
+        prompt,
+        platform,
+        contentType,
+        tone,
+        generatedContent: result,
+        timestamp: new Date()
+      };
+      
+      setGenerationHistory(prev => [historyItem, ...prev]);
+      
     } catch (error) {
       toast({
         title: "Generation failed",
@@ -185,6 +211,26 @@ const ContentGenerator: React.FC = () => {
     toast({
       title: "Content updated",
       description: `Content has been translated and updated`,
+    });
+  };
+
+  const handleDeleteHistoryItem = (id: string) => {
+    setGenerationHistory(prev => prev.filter(item => item.id !== id));
+    toast({
+      title: "History item deleted",
+      description: "The item has been removed from your history",
+    });
+  };
+
+  const handleUseHistoryItem = (item: GenerationHistoryItem) => {
+    setPrompt(item.prompt);
+    setPlatform(item.platform);
+    setContentType(item.contentType);
+    setTone(item.tone);
+    setGeneratedContent(item.generatedContent);
+    toast({
+      title: "Content loaded",
+      description: "Previous generation has been loaded",
     });
   };
 
@@ -381,9 +427,75 @@ const ContentGenerator: React.FC = () => {
         <TabsContent value="history">
           <Card className="cyber-card">
             <CardContent className="pt-6">
-              <div className="text-center py-8">
-                <p className="text-muted-foreground">Your generated content history will appear here</p>
-              </div>
+              {generationHistory.length === 0 ? (
+                <div className="text-center py-8">
+                  <History className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                  <p className="text-muted-foreground">No generation history yet</p>
+                  <p className="text-sm text-muted-foreground mt-2">
+                    Generated content will appear here after you create it
+                  </p>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-lg font-medium">Generation History</h3>
+                    <Badge variant="secondary">{generationHistory.length} items</Badge>
+                  </div>
+                  
+                  <div className="space-y-3 max-h-96 overflow-y-auto">
+                    {generationHistory.map((item) => (
+                      <Card key={item.id} className="border-renegade-green/30">
+                        <CardContent className="pt-4">
+                          <div className="space-y-3">
+                            <div className="flex items-start justify-between">
+                              <div className="flex-1">
+                                <div className="flex items-center gap-2 mb-2">
+                                  <Badge variant="outline" className="text-xs">
+                                    {platforms.find(p => p.value === item.platform)?.label}
+                                  </Badge>
+                                  <Badge variant="outline" className="text-xs">
+                                    {contentTypes.find(t => t.value === item.contentType)?.label}
+                                  </Badge>
+                                  <Badge variant="outline" className="text-xs">
+                                    {item.tone}
+                                  </Badge>
+                                </div>
+                                <p className="text-sm font-medium text-renegade-green mb-1">
+                                  Prompt: {item.prompt}
+                                </p>
+                                <p className="text-sm text-muted-foreground line-clamp-3">
+                                  {item.generatedContent}
+                                </p>
+                              </div>
+                              <div className="flex items-center gap-2 ml-4">
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  onClick={() => handleUseHistoryItem(item)}
+                                  className="border-renegade-green/50 text-renegade-green hover:bg-renegade-green/10"
+                                >
+                                  Use
+                                </Button>
+                                <Button
+                                  size="sm"
+                                  variant="ghost"
+                                  onClick={() => handleDeleteHistoryItem(item.id)}
+                                  className="text-red-500 hover:text-red-700"
+                                >
+                                  <Trash2 className="h-4 w-4" />
+                                </Button>
+                              </div>
+                            </div>
+                            <div className="text-xs text-muted-foreground">
+                              Generated on {item.timestamp.toLocaleString()}
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                </div>
+              )}
             </CardContent>
           </Card>
         </TabsContent>
