@@ -6,8 +6,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ContentGenerator from "@/components/Dashboard/ContentGenerator";
 import AnalyticsOverview from "@/components/Dashboard/AnalyticsOverview";
 import SocialAccounts from "@/components/Dashboard/SocialAccounts";
+import DeepfakeDetection from "@/components/Dashboard/DeepfakeDetection";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Bot, BarChart3, Share2, Calendar, Settings } from "lucide-react";
+import { Bot, BarChart3, Share2, Calendar, Settings, Shield } from "lucide-react";
 
 const DashboardPage: React.FC = () => {
   const { isAuthenticated, user } = useAuth();
@@ -35,6 +36,9 @@ const DashboardPage: React.FC = () => {
             <TabsTrigger value="accounts" className="data-[state=active]:border-b-2 data-[state=active]:border-renegade-green data-[state=active]:text-renegade-green rounded-none">
               <Share2 className="mr-2 h-4 w-4" /> Social Accounts
             </TabsTrigger>
+            <TabsTrigger value="deepfake" className="data-[state=active]:border-b-2 data-[state=active]:border-renegade-green data-[state=active]:text-renegade-green rounded-none">
+              <Shield className="mr-2 h-4 w-4" /> Deepfake Detection
+            </TabsTrigger>
             <TabsTrigger value="schedule" className="data-[state=active]:border-b-2 data-[state=active]:border-renegade-green data-[state=active]:text-renegade-green rounded-none">
               <Calendar className="mr-2 h-4 w-4" /> Scheduler
             </TabsTrigger>
@@ -54,6 +58,10 @@ const DashboardPage: React.FC = () => {
 
         <TabsContent value="accounts" className="space-y-4">
           <SocialAccounts />
+        </TabsContent>
+
+        <TabsContent value="deepfake" className="space-y-4">
+          <DeepfakeDetection />
         </TabsContent>
 
         <TabsContent value="schedule" className="space-y-4">
