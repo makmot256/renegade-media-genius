@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
@@ -39,18 +40,18 @@ const Navbar: React.FC = () => {
 
         {/* Desktop Navigation */}
         <div className="hidden md:flex items-center space-x-6">
-          <Link to="/" className="text-foreground hover:text-renegade-green transition-colors font-medium">
+          <Link to="/" className="nav-text text-foreground hover:text-renegade-green transition-colors font-medium">
             Home
           </Link>
-          <Link to="/features" className="text-foreground hover:text-renegade-green transition-colors font-medium">
+          <Link to="/features" className="nav-text text-foreground hover:text-renegade-green transition-colors font-medium">
             Features
           </Link>
           {isAuthenticated && (
-            <Link to="/dashboard" className="text-foreground hover:text-renegade-green transition-colors font-medium">
+            <Link to="/dashboard" className="nav-text text-foreground hover:text-renegade-green transition-colors font-medium">
               Dashboard
             </Link>
           )}
-          <Link to="/about" className="text-foreground hover:text-renegade-green transition-colors font-medium">
+          <Link to="/about" className="nav-text text-foreground hover:text-renegade-green transition-colors font-medium">
             About
           </Link>
           
@@ -77,8 +78,8 @@ const Navbar: React.FC = () => {
                   </Avatar>
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-56" align="end">
-                <DropdownMenuLabel>My Account</DropdownMenuLabel>
+              <DropdownMenuContent className="dropdown-content w-56" align="end">
+                <DropdownMenuLabel className="dropdown-item">My Account</DropdownMenuLabel>
                 {user?.authMethod === 'wallet' && (
                   <>
                     <DropdownMenuSeparator />
@@ -91,16 +92,16 @@ const Navbar: React.FC = () => {
                   </>
                 )}
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => window.location.href = '/profile'}>
+                <DropdownMenuItem className="dropdown-item" onClick={() => window.location.href = '/profile'}>
                   <User className="mr-2 h-4 w-4" />
                   <span>Profile</span>
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => window.location.href = '/dashboard'}>
+                <DropdownMenuItem className="dropdown-item" onClick={() => window.location.href = '/dashboard'}>
                   <Settings className="mr-2 h-4 w-4" />
                   <span>Dashboard</span>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={handleLogout}>
+                <DropdownMenuItem className="dropdown-item" onClick={handleLogout}>
                   <LogOut className="mr-2 h-4 w-4" />
                   <span>Log out</span>
                 </DropdownMenuItem>
@@ -109,7 +110,7 @@ const Navbar: React.FC = () => {
           ) : (
             <div className="space-x-2">
               <Link to="/login">
-                <Button variant="outline" className="border-renegade-green/50 text-renegade-green hover:bg-renegade-green/10">
+                <Button variant="outline" className="border-renegade-green/50 text-renegade-green hover:bg-renegade-green/10 font-medium">
                   Login
                 </Button>
               </Link>
@@ -138,18 +139,18 @@ const Navbar: React.FC = () => {
       {mobileMenuOpen && (
         <div className="md:hidden bg-background border-t border-border">
           <div className="container mx-auto px-4 py-3 flex flex-col space-y-4">
-            <Link to="/" className="p-2 hover:bg-secondary rounded-md" onClick={() => setMobileMenuOpen(false)}>
+            <Link to="/" className="nav-text p-2 hover:bg-secondary rounded-md font-medium" onClick={() => setMobileMenuOpen(false)}>
               Home
             </Link>
-            <Link to="/features" className="p-2 hover:bg-secondary rounded-md" onClick={() => setMobileMenuOpen(false)}>
+            <Link to="/features" className="nav-text p-2 hover:bg-secondary rounded-md font-medium" onClick={() => setMobileMenuOpen(false)}>
               Features
             </Link>
             {isAuthenticated && (
-              <Link to="/dashboard" className="p-2 hover:bg-secondary rounded-md" onClick={() => setMobileMenuOpen(false)}>
+              <Link to="/dashboard" className="nav-text p-2 hover:bg-secondary rounded-md font-medium" onClick={() => setMobileMenuOpen(false)}>
                 Dashboard
               </Link>
             )}
-            <Link to="/about" className="p-2 hover:bg-secondary rounded-md" onClick={() => setMobileMenuOpen(false)}>
+            <Link to="/about" className="nav-text p-2 hover:bg-secondary rounded-md font-medium" onClick={() => setMobileMenuOpen(false)}>
               About
             </Link>
             
@@ -160,14 +161,14 @@ const Navbar: React.FC = () => {
                   handleLogout();
                   setMobileMenuOpen(false);
                 }}
-                className="border-renegade-green/50 text-renegade-green"
+                className="border-renegade-green/50 text-renegade-green font-medium"
               >
                 Log out
               </Button>
             ) : (
               <div className="flex flex-col space-y-2">
                 <Link to="/login" onClick={() => setMobileMenuOpen(false)}>
-                  <Button variant="outline" className="w-full border-renegade-green/50 text-renegade-green">Login</Button>
+                  <Button variant="outline" className="w-full border-renegade-green/50 text-renegade-green font-medium">Login</Button>
                 </Link>
                 <Link to="/signup" onClick={() => setMobileMenuOpen(false)}>
                   <Button className="w-full bg-renegade-green text-black font-medium">Sign Up</Button>

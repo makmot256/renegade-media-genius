@@ -46,23 +46,23 @@
   }
 
   .light {
-    --background: 0 0% 98%; /* Very light background */
-    --foreground: 220 8% 15%; /* Very dark text for maximum contrast */
+    --background: 142 15% 96%; /* Light green-tinted background */
+    --foreground: 220 15% 15%; /* Very dark text for maximum contrast */
 
-    --card: 0 0% 100%; /* Pure white cards */
-    --card-foreground: 220 8% 15%; /* Very dark text */
+    --card: 142 10% 98%; /* Light green-tinted cards */
+    --card-foreground: 220 15% 15%; /* Very dark text */
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 220 8% 15%;
+    --popover: 142 10% 98%;
+    --popover-foreground: 220 15% 15%;
 
     --primary: 142 78% 38%; /* Slightly darker green for better visibility */
     --primary-foreground: 0 0% 98%;
 
-    --secondary: 220 13% 96%; /* Very light secondary */
-    --secondary-foreground: 220 8% 15%; /* Dark text */
+    --secondary: 142 12% 94%; /* Light green secondary */
+    --secondary-foreground: 220 15% 15%; /* Dark text */
 
-    --muted: 220 13% 94%;
-    --muted-foreground: 220 8% 45%; /* Darker muted text for better readability */
+    --muted: 142 12% 92%;
+    --muted-foreground: 220 15% 35%; /* Darker muted text for better readability */
 
     --accent: 200 97% 48%; /* Blue accent */
     --accent-foreground: 0 0% 98%;
@@ -70,17 +70,17 @@
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 220 13% 86%;
-    --input: 0 0% 100%; /* White input background */
+    --border: 142 20% 82%;
+    --input: 142 10% 98%; /* Light green input background */
     --ring: 142 78% 38%;
 
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 220 8% 15%;
+    --sidebar-background: 142 15% 96%;
+    --sidebar-foreground: 220 15% 15%;
     --sidebar-primary: 142 78% 38%;
     --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 220 13% 95%;
-    --sidebar-accent-foreground: 220 8% 15%;
-    --sidebar-border: 220 13% 91%;
+    --sidebar-accent: 142 12% 93%;
+    --sidebar-accent-foreground: 220 15% 15%;
+    --sidebar-border: 142 20% 87%;
     --sidebar-ring: 142 78% 38%;
   }
 }
@@ -92,6 +92,16 @@
 
   body {
     @apply bg-background text-foreground;
+    /* Add subtle green texture for light mode */
+    background-image: 
+      radial-gradient(circle at 20% 80%, rgba(96, 227, 70, 0.03) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(96, 227, 70, 0.03) 0%, transparent 50%),
+      radial-gradient(circle at 40% 40%, rgba(96, 227, 70, 0.02) 0%, transparent 50%);
+  }
+
+  /* Dark mode keeps original background */
+  :root body {
+    background-image: none;
   }
 }
 
@@ -114,7 +124,7 @@
 
   /* Light mode specific styles */
   .light .cyber-card {
-    @apply border border-renegade-green/30 bg-white shadow-md rounded-md;
+    @apply border border-renegade-green/30 bg-white/90 shadow-md rounded-md backdrop-blur-sm;
   }
 
   .light .neon-text {
@@ -122,7 +132,25 @@
   }
 
   .light .futuristic-bg {
-    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    background: linear-gradient(135deg, hsl(142, 15%, 96%) 0%, hsl(142, 12%, 92%) 100%);
+  }
+
+  /* Navigation text enhancement for light mode */
+  .light .nav-text {
+    @apply text-slate-800 font-semibold;
+  }
+
+  .light .nav-text:hover {
+    @apply text-renegade-green;
+  }
+
+  /* Dropdown menu improvements for light mode */
+  .light .dropdown-content {
+    @apply bg-white/95 backdrop-blur-md border border-renegade-green/20 shadow-lg;
+  }
+
+  .light .dropdown-content .dropdown-item {
+    @apply text-slate-800 hover:bg-renegade-green/10 hover:text-renegade-green;
   }
 }
 
