@@ -10,7 +10,7 @@ import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/components/ui/use-toast";
-import { Settings, Moon, Sun, Bell, Shield, Globe, User, Save } from "lucide-react";
+import { Settings as SettingsIcon, Moon, Sun, Bell, Shield, Globe, User, Save } from "lucide-react";
 import ThemeToggle from "@/components/ThemeToggle";
 
 const Settings: React.FC = () => {
@@ -35,7 +35,7 @@ const Settings: React.FC = () => {
       <Card className="cyber-card">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Settings className="h-5 w-5 text-renegade-green" />
+            <SettingsIcon className="h-5 w-5 text-renegade-green" />
             Application Settings
           </CardTitle>
           <CardDescription>
