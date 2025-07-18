@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
@@ -46,14 +45,17 @@ const Navbar: React.FC = () => {
           <Link to="/features" className="nav-text text-foreground hover:text-renegade-green transition-colors font-medium">
             Features
           </Link>
+          <Link to="/about" className="nav-text text-foreground hover:text-renegade-green transition-colors font-medium">
+            About
+          </Link>
+          <Link to="/pricing" className="nav-text text-foreground hover:text-renegade-green transition-colors font-medium">
+            Pricing
+          </Link>
           {isAuthenticated && (
             <Link to="/dashboard" className="nav-text text-foreground hover:text-renegade-green transition-colors font-medium">
               Dashboard
             </Link>
           )}
-          <Link to="/about" className="nav-text text-foreground hover:text-renegade-green transition-colors font-medium">
-            About
-          </Link>
           
           {/* Add Theme Toggle */}
           <ThemeToggle />
@@ -145,14 +147,17 @@ const Navbar: React.FC = () => {
             <Link to="/features" className="nav-text p-2 hover:bg-secondary rounded-md font-medium" onClick={() => setMobileMenuOpen(false)}>
               Features
             </Link>
+            <Link to="/about" className="nav-text p-2 hover:bg-secondary rounded-md font-medium" onClick={() => setMobileMenuOpen(false)}>
+              About
+            </Link>
+            <Link to="/pricing" className="nav-text p-2 hover:bg-secondary rounded-md font-medium" onClick={() => setMobileMenuOpen(false)}>
+              Pricing
+            </Link>
             {isAuthenticated && (
               <Link to="/dashboard" className="nav-text p-2 hover:bg-secondary rounded-md font-medium" onClick={() => setMobileMenuOpen(false)}>
                 Dashboard
               </Link>
             )}
-            <Link to="/about" className="nav-text p-2 hover:bg-secondary rounded-md font-medium" onClick={() => setMobileMenuOpen(false)}>
-              About
-            </Link>
             
             {isAuthenticated ? (
               <Button
