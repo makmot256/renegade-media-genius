@@ -11,6 +11,11 @@ import { useToast } from "@/components/ui/use-toast";
 import { Input } from "@/components/ui/input";
 import GoogleTranslate from "@/components/GoogleTranslate";
 
+
+import { uploadToIPFS } from "@/lib/ipfs";
+import { createActorWithIdentity } from "@/lib/actor/aiWriterActor";
+import UserFeed from "../UserFeed";
+const cid = "vizcg-th777-77774-qaaea-cai";
 const platforms = [
   { value: "twitter", label: "X / Twitter" },
   { value: "instagram", label: "Instagram" },
@@ -66,30 +71,17 @@ const ContentGenerator: React.FC = () => {
     setGeneratedContent("");
 
     try {
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      let result = "";
-      if (contentType === "ar-post") {
-        result = `🌟 AR Experience Alert! 🌟\n\nStep into the future with our latest AR creation! Using cutting-edge augmented reality technology, we're bringing digital content to life in your physical space.\n\n✨ Interactive 3D elements\n🎮 Immersive user experience\n📱 Compatible with AR-enabled devices\n\n#AugmentedReality #Innovation #TechTrends #AR #DigitalTransformation`;
-      } else if (contentType === "360-video") {
-        result = `🎥 360° Experience Now Live! 🎥\n\nImmerse yourself in a complete 360-degree view! Turn your device, look around, and experience content like never before.\n\n🔄 Full 360° rotation\n📱 Mobile-optimized viewing\n🎬 Cinematic quality\n\nSwipe, tilt, and explore every angle of this incredible footage!\n\n#360Video #ImmersiveContent #VirtualReality #Innovation`;
-      } else if (contentType === "panorama") {
-        result = `📸 Panoramic Perfection! 📸\n\nCapturing the world in breathtaking detail with our panoramic photography. Swipe left and right to explore the full scene!\n\n🌅 Ultra-wide perspective\n📱 Interactive viewing\n🎨 High-resolution imagery\n\nExperience landscapes like never before - every detail preserved in stunning clarity.\n\n#Panorama #Photography #Landscape #VisualStorytelling`;
-      } else {
-        if (platform === "twitter") {
-          result = contentType === "thread" 
-            ? `1/ Web3 innovation continues! Just discovered how @RENEGADE_ICP combines AI with blockchain security.\n\n2/ Their platform generates social media content and securely stores it on the ICP blockchain. Transparency + AI power!\n\n3/ Been testing their automated posting feature across platforms - what used to take hours now happens in seconds. Game-changer for creators!\n\n4/ The analytics insights are surprisingly detailed. I can track performance across all channels from one dashboard. #Web3 #ContentCreation`
-            : `Just discovered @RENEGADE_ICP - an AI content generator built on #InternetComputer that's actually useful! Create, schedule, and track social media posts with blockchain security. Game-changer for my content strategy! #Web3 #AI`;
-        } else if (platform === "instagram") {
-          result = `✨ INNOVATION ALERT ✨\n\nTaking my content game to the next level with @renegade_icp - the Web3 social media manager that uses AI to create engaging posts while keeping my data secure on the blockchain.\n\nNo more spending hours creating content! Now I can focus on what matters - engaging with YOU, my amazing community! ❤️\n\n#ContentCreation #Web3 #AITechnology #SocialMedia #Blockchain #InternetComputer #RENEGADE`;
-        } else if (platform === "linkedin") {
-          result = `🚀 Exciting Web3 Innovation 🚀\n\nI'm thrilled to share my experience with RENEGADE - a groundbreaking platform built on the Internet Computer Protocol that's revolutionizing how professionals manage social media content.\n\nWhat sets it apart:\n• AI-powered content generation tailored to your brand voice\n• Blockchain-based storage for unmatched security and transparency\n• Cross-platform automation to save valuable time\n• Comprehensive analytics to optimize strategy\n\nAs someone who values both innovation and efficiency, I'm impressed by how seamlessly this solution bridges AI capabilities with Web3 security.\n\nHave you explored any blockchain-based tools for your content strategy? I'd love to hear your thoughts!\n\n#Web3 #AIInnovation #ContentStrategy #InternetComputer #ProfessionalGrowth`;
-        }
-      }
-      
+      // Connect to the canister actor with identity
+      const actor = await createActorWithIdentity();
+
+      // Call backend method to generate content
+      //If the intent of handleGenerate is only to generate the content and not save it yet, then remove cid from the call and adjust the backend method if possible:
+      const result = await actor.createContent(prompt, contentType, tone, cid); // adjust args as needed
+
+
       setGeneratedContent(result);
-      
-      // Add to generation history
+
+      // Save to local UI history (not blockchain yet)
       const historyItem: GenerationHistoryItem = {
         id: Date.now().toString(),
         prompt,
@@ -97,12 +89,13 @@ const ContentGenerator: React.FC = () => {
         contentType,
         tone,
         generatedContent: result,
-        timestamp: new Date()
+        timestamp: new Date(),
       };
-      
+
       setGenerationHistory(prev => [historyItem, ...prev]);
-      
+
     } catch (error) {
+      console.error("Generation error:", error);
       toast({
         title: "Generation failed",
         description: "Failed to generate content. Please try again.",
@@ -112,6 +105,7 @@ const ContentGenerator: React.FC = () => {
       setIsGenerating(false);
     }
   };
+
 
   const handleVoiceInput = async () => {
     if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
@@ -125,7 +119,7 @@ const ContentGenerator: React.FC = () => {
 
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     const recognition = new SpeechRecognition();
-    
+
     recognition.continuous = true;
     recognition.interimResults = true;
     recognition.lang = 'en-US';
@@ -133,7 +127,7 @@ const ContentGenerator: React.FC = () => {
     if (!isRecording) {
       setIsRecording(true);
       recognition.start();
-      
+
       recognition.onresult = (event) => {
         let finalTranscript = '';
         for (let i = event.resultIndex; i < event.results.length; i++) {
@@ -184,12 +178,27 @@ const ContentGenerator: React.FC = () => {
     }
   };
 
-  const handleSave = () => {
-    toast({
-      title: "Content saved",
-      description: "Your content has been saved to the blockchain",
-    });
+  const handleSave = async () => {
+    try {
+      const cid = await uploadToIPFS(generatedContent);
+      const actor = await createActorWithIdentity();
+      await actor.createContent(prompt, contentType, tone, cid);
+
+      toast({
+        title: "Saved",
+        description: "Content linked to your identity and stored immutably",
+      });
+    } catch (err) {
+      console.error("Error saving:", err);
+      toast({
+        title: "Failed",
+        description: "Could not save content to blockchain",
+        variant: "destructive",
+      });
+    }
   };
+
+
 
   const handleCopy = () => {
     navigator.clipboard.writeText(generatedContent);
@@ -198,7 +207,7 @@ const ContentGenerator: React.FC = () => {
       description: "The generated content has been copied to your clipboard",
     });
   };
-  
+
   const handleShare = () => {
     toast({
       title: "Ready to share",
@@ -242,8 +251,9 @@ const ContentGenerator: React.FC = () => {
         <TabsList className="grid grid-cols-2">
           <TabsTrigger value="generate">Generate Content</TabsTrigger>
           <TabsTrigger value="history">Generation History</TabsTrigger>
+          <TabsTrigger value="feed">My On-Chain Feed</TabsTrigger>
         </TabsList>
-        
+
         <TabsContent value="generate" className="space-y-6">
           <Card className="cyber-card">
             <CardContent className="pt-6">
@@ -396,13 +406,13 @@ const ContentGenerator: React.FC = () => {
                       </Button>
                     </div>
                   </div>
-                  
-                  <GoogleTranslate 
-                    text={generatedContent} 
+
+                  <GoogleTranslate
+                    text={generatedContent}
                     onTranslate={handleTranslate}
                     className="border-t border-renegade-green/20 pt-4"
                   />
-                  
+
                   <div className="flex flex-col sm:flex-row gap-2">
                     <Button
                       variant="outline"
@@ -423,7 +433,7 @@ const ContentGenerator: React.FC = () => {
             </Card>
           )}
         </TabsContent>
-        
+
         <TabsContent value="history">
           <Card className="cyber-card">
             <CardContent className="pt-6">
@@ -441,7 +451,7 @@ const ContentGenerator: React.FC = () => {
                     <h3 className="text-lg font-medium">Generation History</h3>
                     <Badge variant="secondary">{generationHistory.length} items</Badge>
                   </div>
-                  
+
                   <div className="space-y-3 max-h-96 overflow-y-auto">
                     {generationHistory.map((item) => (
                       <Card key={item.id} className="border-renegade-green/30">
@@ -498,7 +508,10 @@ const ContentGenerator: React.FC = () => {
               )}
             </CardContent>
           </Card>
+        </TabsContent><TabsContent value="feed">
+          <UserFeed />
         </TabsContent>
+
       </Tabs>
     </div>
   );

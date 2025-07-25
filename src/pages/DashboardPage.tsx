@@ -12,6 +12,7 @@ import ContentScheduler from "@/components/Dashboard/ContentScheduler";
 import Settings from "@/components/Dashboard/Settings";
 import { Bot, BarChart3, Share2, Calendar, Settings as SettingsIcon, Shield, Sparkles } from "lucide-react";
 
+
 const DashboardPage: React.FC = () => {
   const { isAuthenticated, user } = useAuth();
 
@@ -24,7 +25,15 @@ const DashboardPage: React.FC = () => {
       <div className="mb-8">
         <h1 className="text-3xl font-bold mb-2">Welcome back, {user?.name}</h1>
         <p className="text-muted-foreground">Manage your content and track performance across platforms.</p>
+
+        {/* Show Internet Identity Principal */}
+        {user?.principal && (
+          <div className="text-xs mt-2 text-muted-foreground">
+            Internet Identity: {user.principal}
+          </div>
+        )}
       </div>
+
 
       <Tabs defaultValue="generate" className="space-y-8">
         <div className="border-b border-renegade-green/30">

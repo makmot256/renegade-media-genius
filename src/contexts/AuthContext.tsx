@@ -4,6 +4,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { useWeb3 } from './Web3Context';
 
 type User = {
+  principal: any; // required
   id: string;
   name: string;
   email: string;
@@ -12,14 +13,18 @@ type User = {
   authMethod: 'email' | 'wallet';
 };
 
+
 type AuthContextType = {
   user: User | null;
+  setUser: (user: User | null) => void;                    // ✅ Add this
+  setIsAuthenticated: (auth: boolean) => void;             // ✅ Add this
+  isAuthenticated: boolean;
   isLoading: boolean;
   login: (email: string, password: string) => Promise<void>;
   loginWithWallet: () => Promise<void>;
   logout: () => void;
-  isAuthenticated: boolean;
 };
+
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -60,18 +65,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const login = async (email: string, password: string) => {
     setIsLoading(true);
-    
+
     try {
       // In a real app, this would be an API call to validate credentials
       // For this demo, we'll simulate a successful login with a mock user
       if (email && password.length > 3) {
         const mockUser = {
-          id: 'user123',
+          principal: null, // Replace with real principal if available
+          id: crypto.randomUUID(), // Or hash of email, or backend-assigned
           name: email.split('@')[0],
           email,
           avatar: `https://api.dicebear.com/7.x/personas/svg?seed=${email}`,
           authMethod: 'email' as const,
         };
+
 
         // Save user to localStorage for persistence
         localStorage.setItem('renegade-user', JSON.stringify(mockUser));
@@ -110,18 +117,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       // Create user from wallet address
       const walletUser = {
+        principal: null, // placeholder value
         id: `wallet_${wallet.address}`,
         name: `${wallet.address.slice(0, 6)}...${wallet.address.slice(-4)}`,
-        email: '', // No email for wallet users
+        email: '',
         avatar: `https://api.dicebear.com/7.x/identicon/svg?seed=${wallet.address}`,
         walletAddress: wallet.address,
         authMethod: 'wallet' as const,
       };
 
+
       // Save user to localStorage for persistence
       localStorage.setItem('renegade-user', JSON.stringify(walletUser));
       setUser(walletUser);
-      
+
       toast({
         title: "Wallet Login Successful",
         description: `Welcome, ${walletUser.name}!`,
@@ -147,14 +156,27 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     });
   };
 
+  // Add setIsAuthenticated implementation
+  const setIsAuthenticated = (auth: boolean) => {
+    if (!auth) {
+      logout();
+    } else if (!user) {
+      // Optionally, you could trigger a login flow here
+      // For now, do nothing if user is not set
+    }
+  };
+
   const value = {
     user,
+    setUser,                         // ✅ Add this
+    isAuthenticated: !!user,
+    setIsAuthenticated,              // ✅ Add this
     isLoading,
     login,
     loginWithWallet,
     logout,
-    isAuthenticated: !!user,
   };
+
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

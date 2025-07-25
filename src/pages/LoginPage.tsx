@@ -9,15 +9,22 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { LogIn, AlertCircle, Wallet } from "lucide-react";
+import { AuthClient } from "@dfinity/auth-client";
+import { HttpAgent } from "@dfinity/agent";
+import { createActorWithIdentity } from "@/lib/actor/aiWriterActor";
+
+//await aiWriterActor.createContent(prompt, type, tone, cid);
 
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { login, loginWithWallet } = useAuth();
+  const { login, loginWithWallet, setUser, setIsAuthenticated } = useAuth();
+
   const { connectWallet, isConnecting, isWalletConnected } = useWeb3();
   const navigate = useNavigate();
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -47,6 +54,44 @@ const LoginPage: React.FC = () => {
       setError("Failed to connect wallet. Please try again.");
     }
   };
+  const identityProvider = "https://identity.ic0.app"; // Mainnet
+
+  //icp state
+  const [principal, setPrincipal] = useState("");
+
+  const handleInternetIdentityLogin = async () => {
+    const authClient = await AuthClient.create();
+
+    await authClient.login({
+      identityProvider,
+      onSuccess: async () => {
+        const identity = authClient.getIdentity();
+        const agent = new HttpAgent({ identity });
+        const principalText = identity.getPrincipal().toText();
+
+        setPrincipal(principalText);
+
+        // ✅ Update auth context so dashboard knows you're logged in
+        setUser({
+          principal: principalText,
+          id: principalText, // using principal as unique ID
+          name: "Internet Identity User",
+          email: "", // optional or empty
+          avatar: `https://api.dicebear.com/7.x/identicon/svg?seed=${principalText}`,
+          walletAddress: undefined, // not needed for Internet Identity
+          authMethod: 'email', // or 'internet-identity' if you want to distinguish
+        });
+
+        setIsAuthenticated(true);
+
+        navigate("/dashboard");
+      }
+      ,
+    });
+  };
+
+
+
 
   return (
     <div className="flex items-center justify-center min-h-[calc(100vh-8rem)] px-4 py-12">
@@ -65,9 +110,18 @@ const LoginPage: React.FC = () => {
                 <AlertDescription>{error}</AlertDescription>
               </Alert>
             )}
-            
+
             {/* Wallet Login Section */}
             <div className="mb-6">
+
+              <Button
+                onClick={handleInternetIdentityLogin}
+                className="w-full bg-renegade-green text-black"
+              >
+                Sign In with Internet Identity
+              </Button>
+
+              <div className="mb-6"></div>
               <Button
                 onClick={handleWalletLogin}
                 disabled={isConnecting}
@@ -85,7 +139,7 @@ const LoginPage: React.FC = () => {
                   </div>
                 )}
               </Button>
-              
+
               <div className="relative">
                 <div className="absolute inset-0 flex items-center">
                   <span className="w-full border-t border-renegade-green/30" />
