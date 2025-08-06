@@ -143,16 +143,16 @@ const PricingPage: React.FC = () => {
 
       <div className="grid md:grid-cols-3 gap-8 max-w-7xl mx-auto">
         {plans.map((plan) => (
-          <Card key={plan.id} className={`cyber-card relative ${plan.popular ? 'border-renegade-green shadow-lg shadow-renegade-green/20' : ''}`}>
+          <Card key={plan.id} className={`cyber-card relative ${plan.popular ? 'border-primary shadow-lg shadow-primary/20' : ''}`}>
             {plan.popular && (
-              <Badge className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-renegade-green text-black">
+              <Badge className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-primary text-primary-foreground">
                 Most Popular
               </Badge>
             )}
             
             <CardHeader className="text-center">
-              <div className="mx-auto mb-4 p-3 bg-renegade-green/20 rounded-full w-fit">
-                <plan.icon className="h-8 w-8 text-renegade-green" />
+              <div className="mx-auto mb-4 p-3 bg-primary/20 rounded-full w-fit">
+                <plan.icon className="h-8 w-8 text-primary" />
               </div>
               <CardTitle className="text-2xl">{plan.name}</CardTitle>
               <CardDescription className="text-base">{plan.description}</CardDescription>
@@ -175,7 +175,7 @@ const PricingPage: React.FC = () => {
               <ul className="space-y-3 mb-6">
                 {plan.features.map((feature, index) => (
                   <li key={index} className="flex items-center gap-3">
-                    <Check className="h-4 w-4 text-renegade-green flex-shrink-0" />
+                    <Check className="h-4 w-4 text-primary flex-shrink-0" />
                     <span className="text-sm">{feature}</span>
                   </li>
                 ))}
@@ -190,7 +190,7 @@ const PricingPage: React.FC = () => {
                   <Button
                     onClick={() => handlePayment(plan.id, 'card')}
                     disabled={loading === plan.id}
-                    className="w-full bg-renegade-green hover:bg-renegade-green/80 text-black"
+                    className="w-full"
                   >
                     <CreditCard className="mr-2 h-4 w-4" />
                     {loading === plan.id ? "Processing..." : "Pay with Card"}
@@ -200,7 +200,7 @@ const PricingPage: React.FC = () => {
                     onClick={() => handlePayment(plan.id, 'wallet')}
                     disabled={loading === plan.id}
                     variant="outline"
-                    className="w-full border-renegade-green/50 text-renegade-green hover:bg-renegade-green/10"
+                    className="w-full"
                   >
                     <Wallet className="mr-2 h-4 w-4" />
                     Pay with Wallet
