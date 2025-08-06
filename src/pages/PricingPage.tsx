@@ -7,12 +7,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/components/ui/use-toast";
 import { Check, Zap, Crown, Wallet, CreditCard } from "lucide-react";
-import { createClient } from "@supabase/supabase-js";
-
-const supabase = createClient(
-  import.meta.env.VITE_SUPABASE_URL,
-  import.meta.env.VITE_SUPABASE_ANON_KEY
-);
 
 const PricingPage: React.FC = () => {
   const { isAuthenticated, user } = useAuth();
@@ -61,10 +55,10 @@ const PricingPage: React.FC = () => {
     {
       id: "yearly",
       name: "Yearly Pro",
-      price: "$150",
+      price: "$200",
       period: "per year",
       originalPrice: "$180",
-      savings: "Save $30",
+      savings: "Save $20",
       description: "Best value for professionals",
       icon: Crown,
       features: [
@@ -104,22 +98,14 @@ const PricingPage: React.FC = () => {
 
     try {
       if (paymentMethod === 'card') {
-        // Stripe payment integration
-        const { data, error } = await supabase.functions.invoke('create-subscription', {
-          body: { 
-            planId,
-            priceId: planId === 'monthly' ? 'price_monthly_15' : 'price_yearly_150'
-          }
+        // This will need to be implemented with the Supabase native integration
+        toast({
+          title: "Payment Feature",
+          description: "Payment integration will be available once Supabase is connected.",
         });
-
-        if (error) throw error;
-
-        if (data?.url) {
-          window.open(data.url, '_blank');
-        }
       } else {
         // Wallet payment integration
-        const amount = planId === 'monthly' ? '0.01' : '0.1'; // ETH equivalent
+        const amount = planId === 'monthly' ? '0.01' : '0.05'; // ETH equivalent
         
         if (wallet?.provider) {
           const signer = await wallet.provider.getSigner();
