@@ -19,4 +19,18 @@ export default defineConfig(({ mode }) => ({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  optimizeDeps: {
+    include: ["react", "react-dom"],
+  },
+  build: {
+    rollupOptions: {
+      external: (id) => {
+        // Handle missing rollup platform dependencies gracefully
+        if (id.includes('@rollup/rollup-')) {
+          return false;
+        }
+        return false;
+      },
+    },
+  },
 }));
